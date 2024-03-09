@@ -1,0 +1,157 @@
+   @commands.Cog.listener()
+    async def on_message(self, message):
+        empty_array = []
+        guild = self.bot.get_guild(1060834133955326002)
+        # guild = self.bot.get_guild(1060834133955326002)
+        with open('JSONfiles/mmroleid.json', 'r') as file:
+            role_id_giver = json.load(file)
+            bot_role = discord.utils.get(guild.roles, name="Mr. Zero")
+            role_id = int(role_id_giver[str(guild.id)][0])
+            print(role_id)
+        role = discord.utils.get(guild.roles, name="@everyone")
+
+        if message.author == self.bot.user:
+            return
+        if str(message.channel.type) == "private":
+            print(guild.channels)
+            print(message.author.name)
+            name = str(f"mm-{message.author.name}").lower().replace(" ", "-")
+            print(name)
+            x121 = str(message.author.id)
+            guild1 = str(guild.id)
+            test = 0
+            get = discord.utils.get(guild.text_channels, name=name)
+            with open("JSONfiles/count.json", "r") as file:
+                data = json.load(file)
+                if not guild1 in data:
+                    with open("JSONfiles/count.json", "r") as file:
+                        data = json.load(file)
+                        if not guild1 in data:
+                            with open("JSONfiles/count.json", "w") as file1:
+                                data[guild1] = [test]
+                                json.dump(data, file1, indent=4)
+                        else:
+                            with open("JSONfiles/count.json", "w") as file1:
+                                data += [guild1]
+                                json.dump(data, file1, indent=4)
+
+            if not x121 in data[guild1]:
+                print("\n\n\n\n\n\n\n\nF\n\n\n\n\n\n")
+                channel = discord.utils.get(guild.channels,
+                                            name="mod-mail-log")
+                create_role = await guild.create_role(
+                    name=f"{message.author.name.lower()}'s Mod Mail Host ")
+                print(create_role)
+                overwrites1 = {
+                    create_role:
+                        discord.PermissionOverwrite(read_messages=True),
+                    role: discord.PermissionOverwrite(read_messages=False),
+                    bot_role: discord.PermissionOverwrite(read_messages=True)
+                }
+                create_channel = await guild.create_text_channel(
+                    f"mm-{message.author.name}", overwrites=overwrites1)
+                h = await create_channel.send(
+                    "**Claim The Mail First by `;claim <ping client>` Then Chat With Client**"
+                )
+                await h.pin()
+                i = await create_channel.send(
+                    f"**You cant Ping the client Normally! Ping The Client By Pasting This! - `<@{message.author.id}>`**"
+                )
+                await i.pin()
+                j = await create_channel.send(
+                    "**If you want to Send message to the client, then first ping them then write text, ex - `@client TEXT`**"
+                )
+                await j.pin()
+                embed777 = discord.Embed(
+                    title=
+                    f"There is a New Mod Mail Opened By {message.author.name}.",
+                    description=
+                    "Please Some one Claim This Mail by Typing `;claim <ping name of client>` in the  Mail Channel (Not this One, The One which has `mm` in its name!). If Anyone Goe to Help the Client Without Typing Claim Command, That wont be Good, You shall get a warning! Thank You"
+                )
+                await channel.send(embed=embed777)
+                embed1211 = discord.Embed(
+                    title="**Thread Opened**",
+                    description=
+                    f"**Dear {message.author.mention}, Your Thread Has Been Created. A Admin or Higher Rank Will Communicate With You Soon! Please Stay tuned**"
+                )
+                await message.author.send(embed=embed1211)
+                x = create_channel.id
+                modmail_channel = self.bot.get_channel(x)
+                if message.attachments != empty_array:
+                    files = message.attachments
+                    await modmail_channel.send("[" +
+                                               message.author.display_name +
+                                               "]")
+
+                    for file in files:
+                        await modmail_channel.send(file.url)
+
+                else:
+                    embed = discord.Embed(
+                        title="Mod Mail Message Recieved Of " +
+                              message.author.display_name + " | ID - " +
+                              str(message.author.id),
+                        description=message.content,
+                        color=0xFF0000)
+                    embed2 = discord.Embed(
+                        title=
+                        "Your Message is Delivered Wait For The Staff Team to reply",
+                        color=0xFF0000)
+                    await message.author.send(embed=embed2)
+                    await create_channel.send(embed=embed)
+                print(guild.text_channels)
+                with open("JSONfiles/count.json", "r") as file:
+                    data = json.load(file)
+                    if guild1 in data:
+                        with open("JSONfiles/count.json", "w") as file1:
+                            data[guild1] += [x121]
+                            json.dump(data, file1, indent=4)
+
+            else:
+                print("YEYEYE")
+                x = get.id
+                modmail_channel = self.bot.get_channel(x)
+                if message.attachments != empty_array:
+                    files = message.attachments
+                    await modmail_channel.send("[" +
+                                               message.author.display_name +
+                                               "]")
+
+                    for file in files:
+                        await modmail_channel.send(file.url)
+                else:
+                    embed = discord.Embed(
+                        title="Mod Mail Message Recieved Of " +
+                              message.author.display_name + " | ID - " +
+                              str(message.author.id),
+                        description=message.content,
+                        color=0xFF0000)
+                    embed2 = discord.Embed(
+                        title=
+                        "Your Message is Delivered Wait For The Staff Team to reply",
+                        color=0xFF0000)
+                    await message.author.send(embed=embed2)
+                    await modmail_channel.send(embed=embed)
+
+        elif str(message.channel).startswith(
+                'mm-') and message.content.startswith('<'):
+            member_object = message.mentions[0]
+            if message.attachments != empty_array:
+                files = message.attachments
+
+                for file in files:
+                    await member_object.send(file.url)
+            else:
+                index = message.content.index(" ")
+                string = message.content
+                mod_message = string[index:]
+                embed1 = discord.Embed(
+                    title="Staff Team Communication Services:",
+                    description=mod_message,
+                    color=0xFF0000)
+                if message.content.endswith("."):
+                    embed1.set_author(name=message.author.name)
+
+                    await member_object.send(embed=embed1)
+                else:
+                    await member_object.send(embed=embed1)
