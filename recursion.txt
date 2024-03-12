@@ -1,0 +1,30 @@
+import java.util.ArrayList;
+import java.util.List;
+
+public class Subarrays {
+    private static List<List<Integer>> res = new ArrayList<>();
+
+    public static void main(String[] args) {
+        int[] arr = {0, 1, 2, 3, 4};
+        int k = 3;
+        generateSubarrays(arr, 0, k, new ArrayList<>());
+        System.out.println(res);
+    }
+
+    private static void generateSubarrays(int[] arr, int start, int k, List<Integer> subarray) {
+        if (k == 0) {
+            List<Integer> copySubarray = new ArrayList<>();
+            for (Integer num : subarray) {
+                copySubarray.add(num);
+            }
+            res.add(copySubarray);
+            return;
+        }
+
+        for (int i = start; i < arr.length; i++) {
+            subarray.add(arr[i]);
+            generateSubarrays(arr, i + 1, k - 1, subarray);
+            subarray.remove(subarray.size() - 1);
+        }
+    }
+}

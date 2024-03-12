@@ -1,0 +1,44 @@
+public class Subarrays {
+    private static int[][] res;
+    private static int resIndex = 0;
+
+    public static void main(String[] args) {
+        int[] arr = {0, 1, 2, 3, 4};
+        int k = 3;
+        int combinations = combinationsCount(arr.length, k);
+        res = new int[combinations][k];
+        generateSubarrays(arr, 0, k, new int[k]);
+        for (int[] subarray : res) {
+            printArray(subarray);
+        }
+    }
+
+    private static int combinationsCount(int n, int k) {
+        if (k == 0 || k == n) {
+            return 1;
+        }
+        return combinationsCount(n - 1, k - 1) + combinationsCount(n - 1, k);
+    }
+
+    private static void generateSubarrays(int[] arr, int start, int k, int[] subarray) {
+        if (k == 0) {
+            for (int i = 0; i < subarray.length; i++) {
+                res[resIndex][i] = subarray[i];
+            }
+            resIndex++;
+            return;
+        }
+
+        for (int i = start; i <= arr.length - k; i++) {
+            subarray[subarray.length - k] = arr[i];
+            generateSubarrays(arr, i + 1, k - 1, subarray);
+        }
+    }
+
+    private static void printArray(int[] arr) {
+        for (int num : arr) {
+            System.out.print(num + " ");
+        }
+        System.out.println();
+    }
+}
